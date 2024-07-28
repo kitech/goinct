@@ -1,7 +1,6 @@
 package goinct
 
 import (
-	"flag"
 	"log"
 
 	"cmd/internal/objfile"
@@ -16,13 +15,13 @@ func errorf(format string, args ...any) {
 	//exitCode = 1
 }
 
-var (
-	sortOrder = flag.String("sort", "name", "")
-	printSize = flag.Bool("size", false, "")
-	printType = flag.Bool("type", false, "")
+// var (
+// 	sortOrder = flag.String("sort", "name", "")
+// 	printSize = flag.Bool("size", false, "")
+// 	printType = flag.Bool("type", false, "")
 
-	filePrefix = false
-)
+// 	filePrefix = false
+// )
 
 type Syminfo struct {
 	Type string
@@ -75,7 +74,7 @@ func NMget(file string) (rets []Syminfo) {
 				} else {
 					// fmt.Fprintf(w, "%s(%s):\t", file, name)
 				}
-			} else if filePrefix {
+				// } else if filePrefix {
 				// fmt.Fprintf(w, "%s:\t", file)
 			}
 			if sym.Code == 'U' {
@@ -83,9 +82,9 @@ func NMget(file string) (rets []Syminfo) {
 			} else {
 				// fmt.Fprintf(w, "%8x", sym.Addr)
 			}
-			if *printSize {
-				// fmt.Fprintf(w, " %10d", sym.Size)
-			}
+			// if *printSize {
+			// 	// fmt.Fprintf(w, " %10d", sym.Size)
+			// }
 			// fmt.Fprintf(w, " %c %s", sym.Code, sym.Name)
 			// if *printType && sym.Type != "" {
 			// 	fmt.Fprintf(w, " %s", sym.Type)
