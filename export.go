@@ -1,21 +1,17 @@
 package goinct
 
 import (
-	"bufio"
 	"flag"
-	"fmt"
 	"log"
-	"os"
-	"sort"
 
 	"cmd/internal/objfile"
 )
 
 func Keep() {
-	objfile.Open(""	)
+	objfile.Open("")
 }
 
- func errorf(format string, args ...any) {
+func errorf(format string, args ...any) {
 	log.Printf(format, args...)
 	//exitCode = 1
 }
@@ -28,8 +24,16 @@ var (
 	filePrefix = false
 )
 
+type Syminfo struct {
+	Type string
+	Name string
+	Code rune
+	Addr uint64
+	Size int64
+}
 
-func NM(file string) {
+// code from go/src/cmd/nm/nm.go
+func NMget(file string) (rets []Syminfo) {
 	f, err := objfile.Open(file)
 	if err != nil {
 		errorf("%v", err)
@@ -37,7 +41,7 @@ func NM(file string) {
 	}
 	defer f.Close()
 
-	w := bufio.NewWriter(os.Stdout)
+	// w := bufio.NewWriter(os.Stdout)
 
 	entries := f.Entries()
 
@@ -54,39 +58,48 @@ func NM(file string) {
 
 		found = true
 
-		switch *sortOrder {
-		case "address":
-			sort.Slice(syms, func(i, j int) bool { return syms[i].Addr < syms[j].Addr })
-		case "name":
-			sort.Slice(syms, func(i, j int) bool { return syms[i].Name < syms[j].Name })
-		case "size":
-			sort.Slice(syms, func(i, j int) bool { return syms[i].Size > syms[j].Size })
-		}
+		// switch *sortOrder {
+		// case "address":
+		// 	sort.Slice(syms, func(i, j int) bool { return syms[i].Addr < syms[j].Addr })
+		// case "name":
+		// 	sort.Slice(syms, func(i, j int) bool { return syms[i].Name < syms[j].Name })
+		// case "size":
+		// 	sort.Slice(syms, func(i, j int) bool { return syms[i].Size > syms[j].Size })
+		// }
 
 		for _, sym := range syms {
 			if len(entries) > 1 {
 				name := e.Name()
 				if name == "" {
-					fmt.Fprintf(w, "%s(%s):\t", file, "_go_.o")
+					// fmt.Fprintf(w, "%s(%s):\t", file, "_go_.o")
 				} else {
-					fmt.Fprintf(w, "%s(%s):\t", file, name)
+					// fmt.Fprintf(w, "%s(%s):\t", file, name)
 				}
 			} else if filePrefix {
-				fmt.Fprintf(w, "%s:\t", file)
+				// fmt.Fprintf(w, "%s:\t", file)
 			}
 			if sym.Code == 'U' {
-				fmt.Fprintf(w, "%8s", "")
+				// fmt.Fprintf(w, "%8s", "")
 			} else {
-				fmt.Fprintf(w, "%8x", sym.Addr)
+				// fmt.Fprintf(w, "%8x", sym.Addr)
 			}
 			if *printSize {
-				fmt.Fprintf(w, " %10d", sym.Size)
+				// fmt.Fprintf(w, " %10d", sym.Size)
 			}
-			fmt.Fprintf(w, " %c %s", sym.Code, sym.Name)
-			if *printType && sym.Type != "" {
-				fmt.Fprintf(w, " %s", sym.Type)
-			}
-			fmt.Fprintf(w, "\n")
+			// fmt.Fprintf(w, " %c %s", sym.Code, sym.Name)
+			// if *printType && sym.Type != "" {
+			// 	fmt.Fprintf(w, " %s", sym.Type)
+			// }
+			// fmt.Fprintf(w, "\n")
+			// log.Println("===", sym.Type, sym.Name, sym.Code, sym.Addr)
+
+			si := Syminfo{}
+			si.Addr = sym.Addr
+			si.Name = sym.Name
+			si.Code = sym.Code
+			si.Type = sym.Type
+			si.Size = sym.Size
+			rets = append(rets, si)
 		}
 	}
 
@@ -94,5 +107,6 @@ func NM(file string) {
 		errorf("reading %s: no symbols", file)
 	}
 
-	w.Flush()
+	// w.Flush()
+	return
 }
