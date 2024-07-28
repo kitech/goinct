@@ -24,15 +24,15 @@ func errorf(format string, args ...any) {
 // )
 
 type Syminfo struct {
-	Type string
 	Name string
 	Code rune
 	Addr uint64
 	Size int64
+	Type string // most empty?
 }
 
 // code from go/src/cmd/nm/nm.go
-func NMget(file string) (rets []Syminfo) {
+func NMget(file string) (rets []Syminfo, err error) {
 	f, err := objfile.Open(file)
 	if err != nil {
 		errorf("%v", err)
