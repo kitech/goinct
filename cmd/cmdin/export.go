@@ -1,13 +1,15 @@
-package goinct
+package cmdin
 
 import (
 	"log"
 
-	"cmd/internal/objfile"
+	"cmd/internal/objfile" // its $GOROOT/src/cmd/internal
+	"internal/abi"         // its $GOROOT/src/internal
 )
 
 func Keep() {
 	objfile.Open("")
+	var _ abi.FuncType
 }
 
 func errorf(format string, args ...any) {

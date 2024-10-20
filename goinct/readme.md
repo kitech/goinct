@@ -1,8 +1,12 @@
 put this package go source directory:
 only goinct part, no github.com/kitech:
-    go/src/cmd/goinct
+    $GOROOT/src/.git
 
-import "cmd/goinct"
+```
+import "goinct"         // << $GOROOT/internal/*
+import "cmd/cmdin"      // << $GOROOT/cmd/internal/*
+import "runtime/rtin"   // << $GOROOT/runtime/internal/*
+```
 
 package means go internal cmd tool
 
